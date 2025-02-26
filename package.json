@@ -1,0 +1,26 @@
+{
+  "name": "test-api-riot",
+  "version": "1.0.0",
+  "description": "This repository has been created to post and save all the changes maded through the development of this aplication, also it's a way to documentate the progress of my learning of Javacript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FelpaUwU/TEST-API-RIOT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FelpaUwU/TEST-API-RIOT/issues"
+  },
+  "homepage": "https://github.com/FelpaUwU/TEST-API-RIOT#readme",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
