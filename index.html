@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test info invocador</title>
+</head>
+<body>
+    <h2>Buscar Información del Invocador</h2>
+    <input type="text" id="summonerName" placeholder="Nombre de Invocador">
+    <input type="text" id="tag" placeholder="Tag">
+    <button onclick="buscarInvocador()">Buscar</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        async function buscarInvocador() {
+            const name = document.getElementById("summonerName").value.trim();
+            const tag = document.getElementById("tag").value.trim();
+            const resultadoDiv = document.getElementById("resultado");
+
+            if (!name || !tag) {
+                resultadoDiv.innerHTML = "<p style='color: red;'>Por favor ingresa ambos valores.</p>";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/summoner/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`);
+                if (!response.ok) {
+                    throw new Error("Invocador no encontrado");
+                }
+                const data = await response.json();
+
+                resultadoDiv.innerHTML = `
+                    <p><strong>Nombre:</strong> ${data.gameName}</p>
+                    <p><strong>Gametag:</strong> ${data.tagLine}</p>
+                    <p><strong>PUUID:</strong> ${data.puuid}</p>
+                `;
+            } catch (error) {
+                resultadoDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+    
+</body>
+</html>

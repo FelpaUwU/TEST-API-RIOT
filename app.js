@@ -21,6 +21,8 @@ app.get('/info', (req, res) => {
     res.send('Pagina de informacion');
 });
 
+app.use('/summoner', require('./Routes/summoner.js'));
+
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
