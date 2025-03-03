@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,12 +12,18 @@
     <button onclick="buscarInvocador()">Buscar</button>
 
     <div id="resultado"></div>
+    <h3>Maestría de Campeones</h3>
+    <div id="maestria"></div>
 
     <script>
         async function buscarInvocador() {
             const name = document.getElementById("summonerName").value.trim();
             const tag = document.getElementById("tag").value.trim();
             const resultadoDiv = document.getElementById("resultado");
+            const maestriaDiv = document.getElementById("maestria");
+
+            resultadoDiv.innerHTML = "";
+            maestriaDiv.innerHTML = "";
 
             if (!name || !tag) {
                 resultadoDiv.innerHTML = "<p style='color: red;'>Por favor ingresa ambos valores.</p>";
@@ -25,6 +31,7 @@
             }
 
             try {
+                // Hacer solicitud para obtener información del invocador
                 const response = await fetch(`http://localhost:3000/summoner/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`);
                 if (!response.ok) {
                     throw new Error("Invocador no encontrado");
@@ -36,11 +43,45 @@
                     <p><strong>Gametag:</strong> ${data.tagLine}</p>
                     <p><strong>PUUID:</strong> ${data.puuid}</p>
                 `;
+
+                // Ahora que tenemos el PUUID, hacemos la segunda solicitud para obtener la maestría
+                obtenerMaestria(data.puuid);
+
             } catch (error) {
                 resultadoDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
             }
         }
+        
+        async function obtenerMaestria(puuid) {
+
+            const name = document.getElementById("summonerName").value.trim();
+            const tag = document.getElementById("tag").value.trim();
+            const resultadoDiv = document.getElementById("resultado");
+            const maestriaDiv = document.getElementById("maestria");
+
+            try {
+                const response = await fetch(`http://localhost:3000/summoner/${encodeURIComponent(name)}/${encodeURIComponent(tag)}/${puuid}`);
+                if (!response.ok) {
+                    throw new Error("No se encontraron campeones con maestría.");
+                }
+                const data = await response.json();
+
+                if (!data.length) {
+                    maestriaDiv.innerHTML = "<p>No se encontraron campeones con maestría.</p>";
+                    return;
+                }
+
+                let lista = "<ul>";
+                data.slice(0, 3).forEach(champion => {
+                    lista += `<li><strong>${champion.championId}:</strong> ${champion.championPoints} puntos</li>`;
+                });
+                lista += "</ul>";
+
+                maestriaDiv.innerHTML = lista;
+            } catch (error) {
+                maestriaDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
+            }
+        }
     </script>
-    
 </body>
 </html>
