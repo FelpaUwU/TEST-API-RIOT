@@ -14,6 +14,11 @@
     <div id="resultado"></div>
     <h3>Maestría de Campeones</h3>
     <div id="maestria"></div>
+    <h3>Ultimas 3 partidas</h3>
+    <div id="partidas"></div>
+    <h3>Detalles de la Partida</h3>
+    <div id="detallesPartida"></div>
+    
 
     <script>
         async function buscarInvocador() {
@@ -46,6 +51,7 @@
 
                 // Ahora que tenemos el PUUID, hacemos la segunda solicitud para obtener la maestría
                 obtenerMaestria(data.puuid);
+                obtenerPartidas(data.puuid);
 
             } catch (error) {
                 resultadoDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
@@ -56,7 +62,6 @@
 
             const name = document.getElementById("summonerName").value.trim();
             const tag = document.getElementById("tag").value.trim();
-            const resultadoDiv = document.getElementById("resultado");
             const maestriaDiv = document.getElementById("maestria");
 
             try {
@@ -78,8 +83,56 @@
                 lista += "</ul>";
 
                 maestriaDiv.innerHTML = lista;
+
             } catch (error) {
                 maestriaDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
+            }
+        }
+        async function obtenerPartidas(puuid) {
+            const name = document.getElementById("summonerName").value.trim();
+            const tag = document.getElementById("tag").value.trim();
+            const partidasDiv = document.getElementById("partidas");
+
+            try {
+                const response = await fetch(`http://localhost:3000/matches/${encodeURIComponent(name)}/${encodeURIComponent(tag)}/${puuid}`);
+                if (!response.ok) {
+                    throw new Error("No se encontraron partidas.");
+                }
+                const data = await response.json();
+                if (!data.length) {
+                    partidasDiv.innerHTML = "<p>No se encontraron partidas.</p>";
+                    return;
+                }
+                let lista = "<ul>";
+                data.slice(0, 3).forEach(partida => {
+                    lista += `<li><a href="#" onclick="obtenerDetallesPartida('${partida}')">${partida}</a></li>`;
+                });
+                lista += "</ul>";
+                partidasDiv.innerHTML = lista;
+            } catch (error) {
+                partidasDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
+            }
+        }
+
+        async function obtenerDetallesPartida(matchId) {
+            const name = document.getElementById("summonerName").value.trim();
+            const tag = document.getElementById("tag").value.trim();
+            const detallesDiv = document.getElementById("detallesPartida");
+
+            try {
+                const response = await fetch(`http://localhost:3000/matches/${encodeURIComponent(name)}/${encodeURIComponent(tag)}/${matchId}/details`);
+                if (!response.ok) {
+                    throw new Error("No se pudo obtener la información de la partida.");
+                }
+                const data = await response.json();
+
+                detallesDiv.innerHTML = `
+                    <p><strong>ID:</strong> ${data.metadata.matchId}</p>
+                    <p><strong>Duración:</strong> ${data.info.gameDuration} segundos</p>
+                    <p><strong>Modo de Juego:</strong> ${data.info.gameMode}</p>
+                `;
+            } catch (error) {
+                detallesDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
             }
         }
     </script>
