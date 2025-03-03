@@ -30,10 +30,37 @@ const obtenerMaestriaCampeones = async (puuid)=>{
         });
         return respuesta.data;
     } catch (error) {
-        console.error("Error al obtener invocador:", error.message);
+        console.error("Error al obtener maestria de campeones:", error.message);
         return null;
     }
-}
+};
 
+const obtenerPartidasInvocador = async (puuid)=>{
+    try {
+        const url = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=20&`
+        const respuesta = await axios.get(url, {
+            headers: {"X-Riot-Token": RIOT_API_KEY}
+        });
+        return respuesta.data;
+        
+    } catch (error) {
+        console.error("Error al obtener las partidas del invocador:", error.message);
+        return null;
+    }
 
-module.exports = { obtenerNombreInvocador, obtenerMaestriaCampeones };
+};
+
+const obtenerPartidaEspecifica = async (matchId) =>{
+    try {
+        const url = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchId}`;
+        const respuesta = await axios.get(url, {
+            headers: {"X-Riot-Token": RIOT_API_KEY}
+        });
+        return respuesta.data;  
+    } catch (error) {
+        console.error("Error al obtener informacion de dicha partida:", error.message);
+        return null;
+    }
+};
+
+module.exports = { obtenerNombreInvocador, obtenerMaestriaCampeones, obtenerPartidasInvocador, obtenerPartidaEspecifica};

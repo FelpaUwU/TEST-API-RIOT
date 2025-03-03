@@ -23,6 +23,8 @@ app.get('/info', (req, res) => {
 
 app.use('/summoner', require('./Routes/summoner.js'));
 
+app.use('/matches', require('./Routes/match.js'));
+
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
