@@ -2,7 +2,7 @@ require('dotenv').config();
 const axios = require('axios');
 
 
-const RIOT_API_KEY = 'RGAPI-8edf49bb-5f6e-45f4-b95f-0f6bec983f0c';
+const RIOT_API_KEY = 'RGAPI-ae4fc1b8-cca9-4e35-b9d8-7ffe58d593f7';
 const region = 'americas';
 const regionEspecifica = 'la1';
 
