@@ -1,31 +1,24 @@
-let championJson = {};
-//Api para consultar informaicion de campeones 
-async function getLatestDDragon() {
-   if(Object.keys(championJson).length > 0) {return champinoJson;}
-   const versions = await fetch("https://ddragon.leagueoflegends.com/api/versions.json");
-   const latest = await versions.json()[0];
+async function obtenerNombreDeCampeon(championId) {
+    try {
+        // Obtener los datos del JSON
+        const response = await fetch("https://ddragon.leagueoflegends.com/cdn/12.6.1/data/en_US/champion.json");
+        if (!response.ok) {
+            throw new Error("Error al obtener los datos");
+        }
 
-   const ddragon = await fetch(`https://ddragon.leagueoflegends.com/cdn/${latest}/data/en_US/champion.json`);
+        const data = await response.json();
 
-   const champions = await ddragon.json()["data"];
-   championJson = champions;
-   return champions;
-}
+        // Buscar el campeón por su ID
+        const campeon = Object.values(data.data).find(champ => champ.key === String(championId));
 
-async function getChampionByKey(key) {
-
-   const champions = await getLatestDDragon();
-
-   for (var championName in champions) {
-      if (!champions.hasOwnProperty(championName)) {continue;}
-
-      if(champions[championName]["key"] === key) {
-         return champions[championName]
-      }
-   }
-
-   return false;
-
+        if (!campeon) {
+            throw new Error("Campeón no encontrado");
+        }
+        return campeon.name; // Retornar el nombre del campeón
+    } catch (error) {
+        console.error("Error:", error);
+        return null; // Retornar null en caso de error
+    }
 }
 
 // Buscar invocador
@@ -84,18 +77,18 @@ async function obtenerMaestria(puuid) {
             return;
         }
 
-        let lista = "<ul>";
-        data.slice(0, 3).forEach(champion => {
-            lista += `<li><strong>${getChampionByKey(champion.championId.championName)}:</strong> ${champion.championPoints} puntos</li>`;
-        });
-        lista += "</ul>";
+        // Obtener los nombres de los campeones de forma asíncrona
+        const listaMaestria = await Promise.all(data.slice(0, 3).map(async (champion) => {
+            return `<li><strong>${await obtenerNombreDeCampeon(champion.championId)|| "Desconocido ASD"}:</strong> ${champion.championPoints} puntos</li>`;
+        }));
 
-        maestriaDiv.innerHTML = lista;
+        maestriaDiv.innerHTML = `<ul>${listaMaestria.join("")}</ul>`;
 
     } catch (error) {
         maestriaDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
     }
 }
+
 
 
 // obtener informacion de partidas
