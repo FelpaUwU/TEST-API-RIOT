@@ -136,7 +136,45 @@ async function obtenerDetallesPartida(matchId) {
             <p><strong>ID:</strong> ${data.metadata.matchId}</p>
             <p><strong>Duración:</strong> ${data.info.gameDuration} segundos</p>
             <p><strong>Modo de Juego:</strong> ${data.info.gameMode}</p>
+            <p style='color: red;'><strong>Equipo Enemigo</strong></p>
         `;
+        data.info.participants.slice(0, 5).forEach((participant, index) => {
+            detallesDiv.innerHTML += `
+                <p><strong>Nombre Invocador ${index + 1}:</strong> ${participant.riotIdGameName}</p>
+                <p><strong>Muertes ${index + 1}:</strong> ${participant.deaths}</p>
+                <p><strong>Kills ${index + 1}:</strong> ${participant.kills}</p>
+                <p><strong>Oro Ganado ${index + 1}:</strong> ${participant.goldEarned}</p>
+                <p><strong>Oro Gastado ${index + 1}:</strong> ${participant.goldSpent}</p>
+                <p><strong>Posicion ${index + 1}:</strong> ${participant.teamPosition}</p>
+                <p><strong>Campeon ${index + 1}:</strong> ${participant.championName}</p>
+                <p><strong>Item 0 ${index + 1}:</strong> ${participant.item0}</p>
+                <p><strong>Item 1 ${index + 1}:</strong> ${participant.item1}</p>
+                <p><strong>Item 2 ${index + 1}:</strong> ${participant.item2}</p>
+                <p><strong>Daño hecho${index + 1}:</strong> ${participant.totalDamageDealtToChampions}</p>
+                <p>-----------------------------------------------------------------</p>
+
+            `;
+        });
+        detallesDiv.innerHTML += `
+            <p style='color: blue;'><strong>Equipo Aliado</strong></p>
+        `;
+
+        data.info.participants.slice(5, 10).forEach((participant, index) => {
+            detallesDiv.innerHTML += `
+                <p><strong>Nombre Invocador ${index + 1}:</strong> ${participant.riotIdGameName}</p>
+                <p><strong>Muertes ${index + 1}:</strong> ${participant.deaths}</p>
+                <p><strong>Kills ${index + 1}:</strong> ${participant.kills}</p>
+                <p><strong>Oro Ganado ${index + 1}:</strong> ${participant.goldEarned}</p>
+                <p><strong>Oro Gastado ${index + 1}:</strong> ${participant.goldSpent}</p>
+                <p><strong>Posicion ${index + 1}:</strong> ${participant.teamPosition}</p>
+                <p><strong>Campeon ${index + 1}:</strong> ${participant.championName}</p>
+                <p><strong>Item 0 ${index + 1}:</strong> ${participant.item0}</p>
+                <p><strong>Item 1 ${index + 1}:</strong> ${participant.item1}</p>
+                <p><strong>Item 2 ${index + 1}:</strong> ${participant.item2}</p>
+                <p><strong>Daño hecho ${index + 1}:</strong> ${participant.totalDamageDealtToChampions}</p>
+                <p>-----------------------------------------------------------------</p>
+            `;
+        });
     } catch (error) {
         detallesDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
     }
